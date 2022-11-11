@@ -1,8 +1,19 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_all_layout/presentation/main_job_platform.dart';
+import 'package:window_size/window_size.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  if (!kIsWeb && (Platform.isMacOS || Platform.isLinux || Platform.isWindows)) {
+    setWindowTitle('Job Platform App');
+    setWindowMinSize(const Size(587.0, 0.0));
+    setWindowMaxSize(Size.infinite);
+  }
   runApp(const MyApp());
 }
 

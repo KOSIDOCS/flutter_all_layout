@@ -56,15 +56,46 @@ class _MyWidgetState extends State<MainJobPlatform>
     bool isHideCol2 = MediaQuery.of(context).size.width < 1000;
     bool isHideSideBar = MediaQuery.of(context).size.width < 600;
 
+    if (isHideCol2) {
+      _controller.reverse();
+    } else {
+      _controller.forward();
+    }
+
+    if (isHideSideBar) {
+      _controller2.reverse();
+    } else {
+      _controller2.forward();
+    }
+
     return Scaffold(
+      drawer: isHideSideBar
+          ? Drawer(
+              backgroundColor: Colors.green,
+              child: ListView(
+                children: const [
+                  DrawerHeader(
+                    decoration: BoxDecoration(
+                      color: Colors.blue,
+                    ),
+                    child: Text('Drawer Header'),
+                  ),
+                ],
+              ),
+            )
+          : null,
       body: Flex(
         direction: Axis.horizontal,
         children: [
-          isHideSideBar
-              ? Container()
-              : Container(
+          AnimatedBuilder(
+              animation: _controller2,
+              builder: (context, child) {
+                return Container(
+                  // second
                   height: MediaQuery.of(context).size.height,
-                  width: 80.0,
+                  width: _animation2.value *
+                      MediaQuery.of(context).size.width *
+                      0.1,
                   constraints: const BoxConstraints(
                     maxWidth: 80,
                   ),
@@ -77,24 +108,27 @@ class _MyWidgetState extends State<MainJobPlatform>
                       ),
                     ),
                   ),
-                ),
-          isHideCol2
-              ? Container()
-              : Flexible(
-                  flex: 2,
-                  child: Container(
-                    height: MediaQuery.of(context).size.height,
-                    decoration: BoxDecoration(
-                      color: Colors.red,
-                      border: Border(
-                        right: BorderSide(
-                          color: Colors.grey.withOpacity(0.6),
-                          width: 0.8,
-                        ),
-                      ),
+                );
+              }),
+          AnimatedBuilder(
+            animation: _controller,
+            builder: (context, child) {
+              return Container(
+                height: MediaQuery.of(context).size.height,
+                width:
+                    _animation.value * MediaQuery.of(context).size.width * 0.3,
+                decoration: BoxDecoration(
+                  color: Colors.red,
+                  border: Border(
+                    right: BorderSide(
+                      color: Colors.grey.withOpacity(0.6),
+                      width: 0.8,
                     ),
                   ),
                 ),
+              );
+            },
+          ),
           Flexible(
             // fifth
             flex: 4,
@@ -226,24 +260,39 @@ class _MyWidgetState extends State<MainJobPlatform>
                           child: IconButton(
                             icon: const Icon(Icons.menu),
                             onPressed: () {
-                              //Scaffold.of(context).openDrawer();
+                              Scaffold.of(context).openDrawer();
                             },
                           ),
                         );
                       }),
                     ),
                   ),
-                  isHideCol2
-                      ? Container()
-                      : Positioned(
-                          top: 70.0,
-                          bottom: 0.0,
-                          right: 0.0,
-                          child: Container(
+                  AnimatedBuilder(
+                    // with animation
+                    animation: _controller,
+                    builder: (context, child) {
+                      return Positioned(
+                        top: 70.0,
+                        bottom: 0.0,
+                        right: 0.0,
+                        child: Container(
+                          height: MediaQuery.of(context).size.height,
+                          width: _animation.value *
+                              MediaQuery.of(context).size.width *
+                              0.2,
+                          decoration: BoxDecoration(
                             color: Colors.purple,
-                            width: 230.0,
+                            border: Border(
+                              right: BorderSide(
+                                color: Colors.grey.withOpacity(0.6),
+                                width: 0.8,
+                              ),
+                            ),
                           ),
                         ),
+                      );
+                    },
+                  ),
                 ],
               ),
             ),
